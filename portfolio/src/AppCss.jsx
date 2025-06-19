@@ -1,961 +1,1077 @@
-import styled from 'styled-components';
+import styled, { createGlobalStyle, keyframes } from "styled-components";
 
-// 테마별 색상 정의
-const themes = {
-  dark: {
-    background: '#111827', // gray-900
-    secondaryBackground: '#1f2937', // gray-800
-    border: '#374151', // gray-700
-    text: '#ffffff',
-    secondaryText: '#d1d5db', // gray-300
-    tertiaryText: '#9ca3af', // gray-400
-    accent: '#9333ea', // purple-600
-    accentHover: '#7e22ce', // purple-700
-    highlight: '#ef4444', // red-500
-    muted: '#6b7280', // gray-500
-  },
-  light: {
-    background: '#f3f4f6', // gray-100
-    secondaryBackground: '#e5e7eb', // gray-200
-    border: '#d1d5db', // gray-300
-    text: '#1f2937', // gray-800
-    secondaryText: '#4b5563', // gray-600
-    tertiaryText: '#6b7280', // gray-500
-    accent: '#7c3aed', // purple-500
-    accentHover: '#6d28d9', // purple-600
-    highlight: '#dc2626', // red-600
-    muted: '#9ca3af', // gray-400
+// Global styles
+export const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
-};
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #000;
+    color: #fff;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+`;
 
-export const AppContainer = styled.div`
-  min-height: 100vh;
-  background-color: ${props => themes[props.theme].background};
-  color: ${props => themes[props.theme].text};
+// Animations
+export const fadeInUp = keyframes`
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+export const fadeInLeft = keyframes`
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+`;
+
+export const pulse = keyframes`
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+`;
+
+export const bounce = keyframes`
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+`;
+
+export const loadingPulse = keyframes`
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+`;
+
+// Loading Bar
+export const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: none;
-`;
-
-export const Header = styled.header`
-  background-color: ${props => themes[props.theme].secondaryBackground};
-  border-bottom: 1px solid ${props => themes[props.theme].border};
-  padding: 0.75rem 1rem;
-`;
-
-export const HeaderContent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: none;
-  margin: 0 auto;
-  padding: 0 0.5rem;
-
-  @media (min-width: 1024px) {
-    padding: 0 1rem;
-  }
-`;
-
-export const ThemeToggleButton = styled.button`
-  position: relative;
-  background-color: ${props => themes[props.theme].secondaryBackground};
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-  transition: background-color 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-
-  &:hover {
-    background-color: ${props => themes[props.theme].border};
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -1.25rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 1rem;
-    height: 1rem;
-    background: url(${props => props.theme === 'dark' ? 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Ccircle cx="12" cy="12" r="5"/%3E%3Cline x1="12" y1="1" x2="12" y2="3"/%3E%3Cline x1="12" y1="21" x2="12" y2="23"/%3E%3Cline x1="4.22" y1="4.22" x2="5.64" y2="5.64"/%3E%3Cline x1="18.36" y1="18.36" x2="19.78" y2="19.78"/%3E%3Cline x1="1" y1="12" x2="3" y2="12"/%3E%3Cline x1="21" y1="12" x2="23" y2="12"/%3E%3Cline x1="4.22" y1="19.78" x2="5.64" y2="18.36"/%3E%3Cline x1="18.36" y1="5.64" x2="19.78" y2="4.22"/%3E%3C/svg%3E' : 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%231f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/%3E%3C/svg%3E'}) no-repeat center;
-    background-size: contain;
-  }
-
-  @media (min-width: 640px) {
-    padding: 0.5rem;
-  }
-`;
-
-export const ProfileSection = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-`;
-
-export const Avatar = styled.div`
-  width: 2rem;
-  height: 2rem;
-  background-color: ${props => themes[props.theme].accent};
-  border-radius: 50%;
+  height: 100%;
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  font-size: 0.875rem;
-
-  @media (min-width: 640px) {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 1rem;
-  }
+  z-index: 1000;
+  opacity: ${({ isLoading }) => (isLoading ? 1 : 0)};
+  visibility: ${({ isLoading }) => (isLoading ? "visible" : "hidden")};
+  transition: opacity 0.5s ease, visibility 0.5s ease;
 `;
 
-export const StatusContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.75rem;
-  color: ${props => themes[props.theme].tertiaryText};
-
-  @media (min-width: 640px) {
-    font-size: 0.875rem;
-  }
+export const LoadingBarContainer = styled.div`
+  width: 300px;
+  height: 8px;
+  background: #1f2937;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
 `;
 
-export const LiveIndicator = styled.div`
-  width: 0.4rem;
-  height: 0.4rem;
-  background-color: ${props => themes[props.theme].highlight};
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-
-  @keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.4; }
-    100% { opacity: 1; }
-  }
-
-  @media (min-width: 640px) {
-    width: 0.5rem;
-    height: 0.5rem;
-  }
-`;
-
-export const ActionButtons = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`;
-
-export const FollowButton = styled.button`
-  background-color: ${props => themes[props.theme].accent};
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.375rem;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: ${props => themes[props.theme].accentHover};
-  }
-
-  @media (min-width: 640px) {
-    padding: 0.5rem 1rem;
-    span { display: inline; }
-  }
-`;
-
-export const SocialLink = styled.a`
-  padding: 0.25rem;
-  background-color: ${props => themes[props.theme].border};
-  border-radius: 0.375rem;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: ${props => themes[props.theme].muted};
-  }
-
-  @media (min-width: 640px) {
-    padding: 0.5rem;
-  }
-`;
-
-export const MainContent = styled.div`
+export const LoadingBar = styled.div`
   width: 100%;
-  max-width: none;
+  height: 100%;
+  background: linear-gradient(to right, #60a5fa, #a78bfa, #ec4899);
+  animation: ${loadingPulse} 1.5s infinite ease-in-out;
+`;
+
+// Main container
+export const Container = styled.div`
+  background: #000;
+  color: #fff;
+  overflow: hidden;
+`;
+
+// Navigation
+export const Nav = styled.nav`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(31, 41, 55, 0.5);
+  transition: all 0.3s ease;
+`;
+
+export const NavContainer = styled.div`
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 64px;
+  @media (min-width: 640px) {
+    height: 80px;
+    padding: 0 24px;
+  }
+`;
+
+export const Logo = styled.div`
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  background: linear-gradient(to right, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  &:hover {
+    transform: scale(1.05);
+  }
+  @media (min-width: 640px) {
+    font-size: 24px;
+  }
+`;
+
+export const NavMenu = styled.div`
+  display: none;
+  @media (min-width: 768px) {
+    display: flex;
+    gap: 4px;
+  }
+`;
+
+export const NavItem = styled.button`
+  padding: 8px 16px;
+  background: ${({ active }) =>
+    active ? "rgba(255, 255, 255, 0.2)" : "transparent"};
+  color: ${({ active }) => (active ? "#fff" : "#9CA3AF")};
+  border-radius: 9999px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: scale(1.05);
+  }
+`;
+
+export const MobileMenuButton = styled.button`
+  display: block;
+  padding: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  @media (min-width: 768px) {
+    display: none;
+  }
+`;
+
+export const MobileMenuIcon = styled.div`
+  width: 24px;
+  height: 24px;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 0.75rem;
-
-  @media (min-width: 1024px) {
-    flex-direction: row;
-    padding: 1rem 0;
-    gap: 1rem;
+  justify-content: center;
+  gap: 6px;
+  div {
+    width: 100%;
+    height: 2px;
+    background: #fff;
+    transition: all 0.3s ease;
   }
+  ${({ isOpen }) =>
+    isOpen &&
+    `
+    div:nth-child(1) { transform: rotate(45deg) translateY(7px); }
+    div:nth-child(2) { opacity: 0; }
+    div:nth-child(3) { transform: rotate(-45deg) translateY(-7px); }
+  `}
 `;
 
-export const ContentSection = styled.div`
-  flex: 1;
-  width: 100%;
-`;
-
-export const StreamPreview = styled.div`
-  background-color: ${props => props.theme === 'dark' ? '#000000' : '#1f2937'};
-  border-radius: 0.5rem;
+export const MobileMenu = styled.div`
+  display: block;
   overflow: hidden;
-  margin-bottom: 0.75rem;
-  aspect-ratio: 16 / 9;
-  position: relative;
-
-  @media (min-width: 640px) {
-    margin-bottom: 1rem;
+  transition: all 0.5s ease;
+  max-height: ${({ isOpen }) => (isOpen ? "320px" : "0")};
+  opacity: ${({ isOpen }) => (isOpen ? "1" : "0")};
+  padding-bottom: ${({ isOpen }) => (isOpen ? "24px" : "0")};
+  @media (min-width: 768px) {
+    display: none;
   }
 `;
 
-export const StreamOverlay = styled.div`
+export const MobileMenuItem = styled.button`
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 24px;
+  color: ${({ active }) => (active ? "#fff" : "#9CA3AF")};
+  background: ${({ active }) =>
+    active ? "rgba(255, 255, 255, 0.2)" : "transparent"};
+  border-radius: 8px;
+  margin: 8px 16px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(8px);
+  }
+`;
+
+// Hero Section
+export const HeroSection = styled.section`
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+`;
+
+export const HeroBackground = styled.div`
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom right, ${props => props.theme === 'dark' ? 'rgba(147, 51, 234, 0.2), rgba(59, 130, 246, 0.2)' : 'rgba(124, 58, 237, 0.2), rgba(37, 99, 235, 0.2)'});
+  .gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(30, 64, 175, 0.2),
+      rgba(107, 33, 168, 0.2),
+      rgba(219, 39, 119, 0.2)
+    );
+  }
+`;
+
+export const Star = styled.div`
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: ${pulse} 2s infinite;
+  will-change: transform;
+`;
+
+export const HeroContent = styled.div`
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  padding: 16px;
+  transform: translateY(${({ scrollY }) => scrollY * 0.3}px);
+  opacity: ${({ scrollY }) => Math.max(1 - scrollY / 500, 0)};
+  will-change: transform, opacity;
+`;
+
+export const HeroLabel = styled.span`
+  display: block;
+  font-size: 14px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+  animation: ${fadeInUp} 1s ease-out 0.5s forwards;
+  opacity: 0;
+  @media (min-width: 640px) {
+    font-size: 16px;
+  }
+`;
+
+export const HeroTitle = styled.h1`
+  font-size: 40px;
+  font-weight: 300;
+  margin-bottom: 24px;
+  line-height: 1.2;
+  animation: ${fadeInUp} 1s ease-out 1s forwards;
+  opacity: 0;
+  @media (min-width: 640px) {
+    font-size: 64px;
+  }
+  @media (min-width: 768px) {
+    font-size: 96px;
+  }
+  .highlight {
+    background: linear-gradient(to right, #60a5fa, #a78bfa, #ec4899);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: ${pulse} 2s infinite;
+  }
+`;
+
+export const HeroSubtitle = styled.p`
+  font-size: 18px;
+  color: #9ca3af;
+  max-width: 640px;
+  margin: 0 auto 48px;
+  line-height: 1.6;
+  animation: ${fadeInUp} 1s ease-out 1.5s forwards;
+  opacity: 0;
+  @media (min-width: 640px) {
+    font-size: 20px;
+  }
+  @media (min-width: 768px) {
+    font-size: 24px;
+  }
+`;
+
+export const HeroButtonGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  animation: ${fadeInUp} 1s ease-out 2s forwards;
+  opacity: 0;
+  @media (min-width: 640px) {
+    flex-direction: row;
+  }
+`;
+
+export const PrimaryButton = styled.button`
+  padding: 16px 32px;
+  background: #fff;
+  color: #000;
+  border-radius: 9999px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  &:hover {
+    background: #e5e7eb;
+    transform: scale(1.1);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    span:last-child {
+      transform: translateX(4px);
+    }
+  }
+`;
+
+export const SecondaryButton = styled.button`
+  padding: 16px 32px;
+  border: 1px solid #4b5563;
+  border-radius: 9999px;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover {
+    background: #fff;
+    color: #000;
+    transform: scale(1.1);
+  }
+`;
+
+export const FloatingElement = styled.div`
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: ${bounce} 3s infinite;
+  background-color: ${(props) =>
+    ["#3B82F6", "#8B5CF6", "#EC4899"][props.index % 3]};
+  will-change: transform;
+`;
+
+// About Section
+export const AboutSection = styled.section`
+  padding: 80px 16px;
+  transition: all 0.5s ease;
+  transform: ${({ isVisible }) =>
+    isVisible ? "translateY(0)" : "translateY(80px)"};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+  will-change: transform, opacity;
+  @media (min-width: 640px) {
+    padding: 128px 24px;
+  }
+`;
+
+export const AboutContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+export const AboutGrid = styled.div`
+  display: grid;
+  gap: 32px;
+  align-items: center;
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+`;
+
+export const AboutText = styled.div`
+  transition: all 0.5s ease;
+`;
+
+export const AboutLabel = styled.span`
+  display: block;
+  font-size: 14px;
+  color: #60a5fa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+  animation: ${fadeInLeft} 1s ease-out 0.2s forwards;
+  opacity: 0;
+`;
+
+export const AboutTitle = styled.h2`
+  font-size: 36px;
+  font-weight: 300;
+  margin-bottom: 32px;
+  transition: all 0.5s ease;
+  transform: ${({ isVisible }) =>
+    isVisible ? "translateX(0)" : "translateX(40px)"};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+  @media (min-width: 640px) {
+    font-size: 48px;
+  }
+`;
+
+export const AboutParagraph = styled.p`
+  font-size: 16px;
+  color: #9ca3af;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  transition: all 0.5s ease;
+  transform: ${({ isVisible, delay }) =>
+    isVisible ? "translateX(0)" : "translateX(40px)"};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+  transition-delay: ${({ delay }) => delay}s;
+  @media (min-width: 640px) {
+    font-size: 18px;
+  }
+`;
+
+export const AboutTags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  transition: all 0.5s ease;
+  transform: ${({ isVisible }) =>
+    isVisible ? "translateX(0)" : "translateX(40px)"};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+  transition-delay: 0.6s;
+`;
+
+export const AboutTag = styled.div`
+  padding: 8px 16px;
+  background: linear-gradient(
+    to right,
+    rgba(30, 64, 175, 0.3),
+    rgba(107, 33, 168, 0.3)
+  );
+  border: 1px solid #374151;
+  border-radius: 9999px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  &:hover {
+    border-color: #6b7280;
+    transform: scale(1.05);
+  }
+`;
+
+export const AboutImageContainer = styled.div`
+  position: relative;
+  transition: all 0.5s ease 0.3s;
+  transform: ${({ isVisible }) =>
+    isVisible ? "translateY(0) scale(1)" : "translateY(40px) scale(0.95)"};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+`;
+
+export const AboutImage = styled.div`
+  width: 100%;
+  height: 320px;
+  background: linear-gradient(
+    135deg,
+    rgba(30, 64, 175, 0.2),
+    rgba(107, 33, 168, 0.2)
+  );
+  border-radius: 24px;
+  border: 1px solid #1f2937;
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-export const StreamContent = styled.div`
-  text-align: center;
-  padding: 0.5rem;
-
+  position: relative;
+  overflow: hidden;
+  &:hover .icon {
+    transform: scale(1.1);
+  }
+  &:hover .overlay {
+    opacity: 1;
+  }
   @media (min-width: 640px) {
-    padding: 1rem;
+    height: 384px;
   }
-`;
-
-export const StreamTitle = styled.h2`
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 0.25rem;
-  color: ${props => themes[props.theme].text};
-
-  @media (min-width: 640px) {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-`;
-
-export const StreamText = styled.p`
-  color: ${props => themes[props.theme].tertiaryText};
-  font-size: 0.875rem;
-
-  @media (min-width: 640px) {
-    font-size: 1rem;
-  }
-`;
-
-export const StyledIcon = styled.div`
-  margin: 0 auto 0.5rem;
-  color: ${props => themes[props.theme].accent};
-
-  @media (min-width: 640px) {
-    margin-bottom: 1rem;
-  }
-`;
-
-export const WatchButton = styled.button`
-  margin-top: 0.5rem;
-  background-color: ${props => themes[props.theme].accent};
-  padding: 0.25rem 1rem;
-  border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-left: auto;
-  margin-right: auto;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: ${props => themes[props.theme].accentHover};
-  }
-
-  @media (min-width: 640px) {
-    margin-top: 1rem;
-    padding: 0.5rem 1.5rem;
-  }
-`;
-
-export const TabsContainer = styled.div`
-  display: flex;
-  gap: 0.25rem;
-  margin-bottom: 0.75rem;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-
-  @media (min-width: 640px) {
-    margin-bottom: 1rem;
-  }
-`;
-
-export const TabButtonStyled = styled.button`
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.75rem;
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-  transition: all 0.3s;
-  background-color: ${props => props.active ? themes[props.theme].accent : themes[props.theme].secondaryBackground};
-  color: ${props => props.active ? themes[props.theme].text : themes[props.theme].secondaryText};
-  font-size: 0.875rem;
-
-  &:hover:not([data-active=true]) {
-    background-color: ${props => themes[props.theme].muted};
-  }
-
-  span {
-    @media (max-width: 640px) {
-      display: none;
+  .icon {
+    font-size: 48px;
+    opacity: 0.2;
+    transition: transform 0.5s ease;
+    @media (min-width: 640px) {
+      font-size: 64px;
     }
   }
-
-  @media (min-width: 640px) {
-    padding: 0.5rem 1rem;
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(107, 33, 168, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.5s ease;
   }
 `;
 
-export const TabContent = styled.div`
-  background-color: ${props => themes[props.theme].secondaryBackground};
-  border-radius: 0.5rem;
-  padding: 1rem;
-
+// Skills Section
+export const SkillsSection = styled.section`
+  padding: 80px 16px;
+  background: rgba(17, 24, 39, 0.3);
+  transition: all 0.5s ease 0.2s;
+  transform: ${({ isVisible }) =>
+    isVisible ? "translateY(0)" : "translateY(80px)"};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+  will-change: transform, opacity;
   @media (min-width: 640px) {
-    padding: 1.5rem;
+    padding: 128px 24px;
   }
 `;
 
-export const SectionTitle = styled.h3`
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 0.75rem;
-  color: ${props => themes[props.theme].accent};
-
-  @media (min-width: 640px) {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-`;
-
-export const AboutContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-
-  @media (min-width: 640px) {
-    gap: 1rem;
-  }
-`;
-
-export const AboutText = styled.p`
-  color: ${props => themes[props.theme].secondaryText};
-  line-height: 1.625;
-  font-size: 0.875rem;
-
-  @media (min-width: 640px) {
-    font-size: 1rem;
-  }
-`;
-
-export const StatsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-  }
-`;
-
-export const StatCard = styled.div`
-  background-color: ${props => themes[props.theme].border};
-  padding: 0.5rem;
-  border-radius: 0.375rem;
+export const SkillsContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
   text-align: center;
+`;
 
+export const SkillsLabel = styled.span`
+  display: block;
+  font-size: 14px;
+  color: #60a5fa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+`;
+
+export const SkillsTitle = styled.h2`
+  font-size: 36px;
+  font-weight: 300;
+  margin-bottom: 64px;
   @media (min-width: 640px) {
-    padding: 0.75rem;
+    font-size: 48px;
   }
 `;
 
-export const StatValue = styled.div`
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: ${props => themes[props.theme].accent};
-
-  @media (min-width: 640px) {
-    font-size: 1.5rem;
-  }
-`;
-
-export const StatLabel = styled.div`
-  font-size: 0.75rem;
-  color: ${props => themes[props.theme].tertiaryText};
-
-  @media (min-width: 640px) {
-    font-size: 0.875rem;
-  }
-`;
-
-export const ProjectsGrid = styled.div`
+export const SkillsGrid = styled.div`
   display: grid;
-  gap: 0.75rem;
-
+  gap: 24px;
   @media (min-width: 640px) {
-    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
   }
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`;
+
+export const SkillCard = styled.div`
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  border: 1px solid #1f2937;
+  transition: all 0.5s ease;
+  transform: ${({ isVisible }) => (isVisible ? "scale(1)" : "scale(0.95)")};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+  &:hover {
+    border-color: #4b5563;
+    transform: scale(1.05) rotate(1deg);
+  }
+`;
+
+export const SkillIcon = styled.div`
+  font-size: 32px;
+  margin-bottom: 16px;
+  transition: transform 0.3s ease;
+  ${SkillCard}:hover & {
+    transform: scale(1.1);
+  }
+  @media (min-width: 640px) {
+    font-size: 40px;
+  }
+`;
+
+export const SkillTitle = styled.h3`
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  @media (min-width: 640px) {
+    font-size: 24px;
+  }
+`;
+
+export const SkillItem = styled.div`
+  color: #9ca3af;
+  transition: all 0.3s ease;
+  &:hover {
+    color: #fff;
+    transform: translateX(8px);
+  }
+`;
+
+export const SkillBar = styled.div`
+  height: 4px;
+  background: linear-gradient(to right, ${(props) => props.color});
+  border-radius: 9999px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s ease;
+  margin-top: 24px;
+  ${SkillCard}:hover & {
+    transform: scaleX(1);
+  }
+`;
+
+// Projects Section
+export const ProjectsSection = styled.section`
+  padding: 80px 16px;
+  transition: all 0.5s ease;
+  transform: ${({ isVisible }) =>
+    isVisible ? "translateY(0)" : "translateY(80px)"};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+  will-change: transform, opacity;
+  @media (min-width: 640px) {
+    padding: 128px 24px;
+  }
+`;
+
+export const ProjectsContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+export const ProjectsHeader = styled.div`
+  text-align: center;
+  margin-bottom: 64px;
+`;
+
+export const ProjectsLabel = styled.span`
+  display: block;
+  font-size: 14px;
+  color: #60a5fa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+`;
+
+export const ProjectsTitle = styled.h2`
+  font-size: 36px;
+  font-weight: 300;
+  margin-bottom: 16px;
+  @media (min-width: 640px) {
+    font-size: 48px;
+  }
+`;
+
+export const ProjectsSubtitle = styled.p`
+  color: #9ca3af;
+  max-width: 640px;
+  margin: 0 auto;
 `;
 
 export const ProjectCard = styled.div`
-  background-color: ${props => themes[props.theme].border};
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-  transition: background-color 0.3s;
+  display: grid;
+  gap: 32px;
+  align-items: center;
+  margin-bottom: 96px;
+  @media (min-width: 767px) {
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    margin-bottom: 128px;
+    &:nth-child(even) {
+      .column-1 {
+        grid-column-start: 2;
+      }
+      .column-2 {
+        grid-column-start: 1;
+        grid-column-end: 2;
+      }
+    }
+  }
+`;
+
+export const ProjectText = styled.div`
+  transition: all 0.5s ease;
+`;
+
+export const ProjectLabel = styled.span`
+  display: block;
+  font-size: 14px;
+  color: #60a5fa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+`;
+
+export const ProjectTitle = styled.h3`
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  transition: color 0.3s ease;
   cursor: pointer;
-
   &:hover {
-    background-color: ${props => themes[props.theme].muted};
+    color: #60a5fa;
   }
-
   @media (min-width: 640px) {
-    padding: 1rem;
-  }
-`;
-
-export const ProjectHeader = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-
-  @media (min-width: 640px) {
-    margin-bottom: 0.75rem;
-  }
-`;
-
-export const ProjectTitle = styled.h4`
-  font-weight: bold;
-  font-size: 1rem;
-
-  @media (min-width: 640px) {
-    font-size: 1.125rem;
+    font-size: 28px;
   }
 `;
 
 export const ProjectDescription = styled.p`
-  color: ${props => themes[props.theme].tertiaryText};
-  font-size: 0.75rem;
-
+  font-size: 16px;
+  color: #9ca3af;
+  line-height: 1.6;
+  margin-bottom: 24px;
   @media (min-width: 640px) {
-    font-size: 0.875rem;
-  }
-`;
-
-export const ViewerCount = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  color: ${props => themes[props.theme].highlight};
-  font-size: 0.75rem;
-
-  @media (min-width: 640px) {
-    font-size: 0.875rem;
+    font-size: 18px;
   }
 `;
 
 export const TechTags = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-bottom: 0.5rem;
-
-  @media (min-width: 640px) {
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
+  gap: 8px;
+  margin-bottom: 32px;
 `;
 
 export const TechTag = styled.span`
-  background-color: ${props => themes[props.theme].accent};
-  padding: 0.125rem 0.25rem;
-  border-radius: 0.25rem;
-  font-size: 0.625rem;
-
-  @media (min-width: 640px) {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.75rem;
-  }
-`;
-
-export const ProjectFooter = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  color: ${props => themes[props.theme].tertiaryText};
-
-  @media (min-width: 640px) {
-    gap: 0.75rem;
-    font-size: 0.875rem;
-  }
-`;
-
-export const CategoryTag = styled.span`
-  background-color: ${props => themes[props.theme].muted};
-  padding: 0.125rem 0.25rem;
-  border-radius: 0.25rem;
-
-  @media (min-width: 640px) {
-    padding: 0.25rem 0.5rem;
-  }
-`;
-
-export const SiteLinkButton = styled.a`
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-  background-color: ${props => themes[props.theme].accent};
-  color: ${props => themes[props.theme].text};
-  transition: background-color 0.3s;
-  text-decoration: none;
-
+  padding: 4px 12px;
+  background: #1f2937;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 9999px;
+  transition: all 0.3s ease;
   &:hover {
-    background-color: ${props => themes[props.theme].accentHover};
+    background: #374151;
+    transform: scale(1.05);
   }
-
   @media (min-width: 640px) {
-    padding: 0.5rem 0.75rem;
+    font-size: 14px;
   }
 `;
 
-export const ExperienceContainer = styled.div`
+export const ProjectButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-
+  gap: 16px;
   @media (min-width: 640px) {
-    gap: 1.5rem;
-  }
-`;
-
-export const ExperienceItem = styled.div`
-  border-left: 4px solid ${props => props.highlight ? themes[props.theme].accent : themes[props.theme].muted};
-  padding-left: 0.75rem;
-
-  @media (min-width: 640px) {
-    padding-left: 1rem;
-  }
-`;
-
-export const ExperienceTitle = styled.h4`
-  font-weight: bold;
-  font-size: 1rem;
-
-  @media (min-width: 640px) {
-    font-size: 1.125rem;
-  }
-`;
-
-export const ExperienceCompany = styled.p`
-  color: ${props => props.highlight ? themes[props.theme].accent : themes[props.theme].tertiaryText};
-  font-size: 0.875rem;
-
-  @media (min-width: 640px) {
-    font-size: 1rem;
-  }
-`;
-
-export const ExperienceDescription = styled.p`
-  color: ${props => themes[props.theme].tertiaryText};
-  margin-top: 0.25rem;
-  font-size: 0.875rem;
-
-  @media (min-width: 640px) {
-    margin-top: 0.5rem;
-    font-size: 1rem;
-  }
-`;
-
-export const ChatContainer = styled.div`
-  width: 100%;
-  background-color: ${props => themes[props.theme].secondaryBackground};
-  border-radius: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  min-height: 20rem;
-
-  @media (min-width: 1024px) {
-    width: 20rem;
-    min-height: 0;
-    height: auto;
-  }
-`;
-
-export const ChatHeader = styled.div`
-  padding: 0.75rem;
-  border-bottom: 1px solid ${props => themes[props.theme].border};
-
-  @media (min-width: 640px) {
-    padding: 1rem;
-  }
-`;
-
-export const ChatTitle = styled.h3`
-  font-weight: bold;
-  font-size: 1rem;
-
-  @media (min-width: 640px) {
-    font-size: 1.125rem;
-  }
-`;
-
-export const ChatMessageCount = styled.p`
-  font-size: 0.75rem;
-  color: ${props => themes[props.theme].tertiaryText};
-
-  @media (min-width: 640px) {
-    font-size: 0.875rem;
-  }
-`;
-
-export const ChatMessages = styled.div`
-  flex: 1;
-  padding: 0.75rem;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
-  @media (min-width: 640px) {
-    padding: 1rem;
-    gap: 0.75rem;
-  }
-`;
-
-export const ChatMessage = styled.div`
-  font-size: 0.75rem;
-
-  @media (min-width: 640px) {
-    font-size: 0.875rem;
-  }
-`;
-
-export const MessageHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-bottom: 0.25rem;
-`;
-
-export const MessageUser = styled.span`
-  font-weight: bold;
-  color: ${props => themes[props.theme].accent};
-`;
-
-export const MessageTimestamp = styled.span`
-  font-size: 0.625rem;
-  color: ${props => themes[props.theme].muted};
-
-  @media (min-width: 640px) {
-    font-size: 0.75rem;
-  }
-`;
-
-export const MessageText = styled.p`
-  color: ${props => themes[props.theme].secondaryText};
-`;
-
-export const ChatInputContainer = styled.div`
-  padding: 0.75rem;
-  border-top: 1px solid ${props => themes[props.theme].border};
-
-  @media (min-width: 640px) {
-    padding: 1rem;
-  }
-`;
-
-export const ChatInputWrapper = styled.div`
-  display: flex;
-  gap: 0.25rem;
-
-  @media (min-width: 640px) {
-    gap: 0.5rem;
-  }
-`;
-
-export const ChatInput = styled.input`
-  flex: 1;
-  background-color: ${props => themes[props.theme].border};
-  border-radius: 0.375rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  color: ${props => themes[props.theme].text};
-  border: none;
-  outline: none;
-
-  &:focus {
-    box-shadow: 0 0 0 2px ${props => themes[props.theme].accent};
-  }
-
-  @media (min-width: 640px) {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-  }
-`;
-
-export const SendButton = styled.button`
-  background-color: ${props => themes[props.theme].accent};
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: ${props => themes[props.theme].accentHover};
-  }
-
-  @media (min-width: 640px) {
-    padding: 0.5rem 0.75rem;
-  }
-`;
-
-export const ScrollToTopButton = styled.button`
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  background-color: ${props => themes[props.theme].accent};
-  padding: 0.5rem;
-  border-radius: 50%;
-  display: ${props => props.visible ? 'flex' : 'none'};
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s, opacity 0.3s;
-  opacity: ${props => props.visible ? 1 : 0};
-
-  &:hover {
-    background-color: ${props => themes[props.theme].accentHover};
-  }
-
-  @media (min-width: 640px) {
-    padding: 0.75rem;
-  }
-`;
-
-// Project Detail Page Styles
-export const ProjectDetailContainer = styled.div`
-  width: 100%;
-  max-width: none;
-  padding: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-
-  @media (min-width: 1024px) {
     flex-direction: row;
-    padding: 1rem 0;
-    gap: 1rem;
   }
 `;
 
-export const ProjectDetailMain = styled.div`
-  flex: 1;
-`;
-
-export const ProjectDetailTitle = styled.h1`
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: ${props => themes[props.theme].text};
-  margin-bottom: 0.5rem;
-
-  @media (min-width: 640px) {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
+export const ProjectDetailsButton = styled.button`
+  padding: 12px 24px;
+  border: 1px solid #4b5563;
+  border-radius: 9999px;
+  background: transparent;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  &:hover {
+    background: #fff;
+    color: #000;
+    transform: scale(1.05);
+    span:last-child {
+      transform: translateX(4px);
+    }
   }
 `;
 
-export const ProjectDetailDescription = styled.p`
-  color: ${props => themes[props.theme].secondaryText};
-  font-size: 0.875rem;
-  margin-bottom: 0.75rem;
-
-  @media (min-width: 640px) {
-    font-size: 1rem;
-    margin-bottom: 1rem;
+export const ProjectLinkButton = styled.button`
+  padding: 12px 24px;
+  color: #9ca3af;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  &:hover {
+    color: #fff;
   }
 `;
 
-export const ProjectDetailPlayer = styled.div`
-  background-color: ${props => props.theme === 'dark' ? '#000000' : '#1f2937'};
-  border-radius: 0.5rem;
+export const ProjectImageContainer = styled.div`
+  position: relative;
   overflow: hidden;
-  aspect-ratio: 16 / 9;
-  margin-bottom: 0.75rem;
-  position: flex;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+`;
+
+export const ProjectImage = styled.img`
+  width: 100%;
+  height: 256px;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+  ${ProjectImageContainer}:hover & {
+    transform: scale(1.1);
+  }
+  @media (min-width: 640px) {
+    height: 320px;
+  }
+`;
+
+export const ProjectImageOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  ${ProjectImageContainer}:hover & {
+    opacity: 1;
+  }
+`;
+
+export const ProjectImageIcon = styled.div`
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-
-  color: ${props => themes[props.theme].tertiaryText};
-
-  @media (min-width: 640px) {
-    margin-bottom: 1rem;
+  opacity: 0;
+  transition: all 0.5s ease;
+  div {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    border-radius: 50%;
+    padding: 16px;
+    transform: scale(0.75);
+    transition: transform 0.3s ease;
+    font-size: 24px;
+  }
+  ${ProjectImageContainer}:hover & {
+    opacity: 1;
+    div {
+      transform: scale(1);
+    }
   }
 `;
 
-export const ProjectDetailInfo = styled.div`
-  background-color: ${props => themes[props.theme].secondaryBackground};
-  border-radius: 0.5rem;
-  padding: 1rem;
-
+// Contact Section
+export const ContactSection = styled.section`
+  padding: 80px 16px;
+  background: linear-gradient(to bottom, #000, #111827);
+  transition: all 0.5s ease;
+  transform: ${({ isVisible }) =>
+    isVisible ? "translateY(0)" : "translateY(80px)"};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+  will-change: transform, opacity;
   @media (min-width: 640px) {
-    padding: 1.5rem;
+    padding: 128px 24px;
   }
 `;
 
-export const ProjectDetailMeta = styled.div`
+export const ContactContainer = styled.div`
+  max-width: 896px;
+  margin: 0 auto;
+  text-align: center;
+`;
+
+export const ContactLabel = styled.span`
+  display: block;
+  font-size: 14px;
+  color: #60a5fa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+`;
+
+export const ContactTitle = styled.h2`
+  font-size: 36px;
+  font-weight: 300;
+  margin-bottom: 32px;
+  @media (min-width: 640px) {
+    font-size: 48px;
+  }
+`;
+
+export const ContactSubtitle = styled.p`
+  font-size: 18px;
+  color: #9ca3af;
+  max-width: 640px;
+  margin: 0 auto 48px;
+  line-height: 1.6;
+  @media (min-width: 640px) {
+    font-size: 20px;
+  }
+`;
+
+export const ContactButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 48px;
   @media (min-width: 640px) {
-    gap: 0.75rem;
+    flex-direction: row;
+    gap: 24px;
   }
 `;
 
-export const ProjectDetailMetaItem = styled.div`
-  font-size: 0.875rem;
-  color: ${props => themes[props.theme].secondaryText};
-
+export const ContactCardGrid = styled.div`
+  display: grid;
+  gap: 24px;
+  margin-top: 64px;
   @media (min-width: 640px) {
-    font-size: 1rem;
-  }
-
-  & strong {
-    color: ${props => themes[props.theme].accent};
-    margin-right: 0.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
   }
 `;
 
-export const BackButton = styled.button`
-  background-color: ${props => themes[props.theme].accent};
-  padding: ${props => props.padding || '0.5rem 1rem'};
-  border-radius: 0.375rem;
-  display: inline-block;
-  align-items: center;
-  gap: 0.25rem;
-  color: ${props => themes[props.theme].text};
-  margin-bottom: 0.75rem;
-  transition: background-color 0.3s;
-
+export const ContactCard = styled.div`
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  border: 1px solid #1f2937;
+  transition: all 0.5s ease;
+  transform: ${({ isVisible }) => (isVisible ? "scale(1)" : "scale(0.95)")};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
   &:hover {
-    background-color: ${props => themes[props.theme].accentHover};
-  }
-
-  @media (min-width: 640px) {
-    padding: 0.75rem 1.5rem;
+    border-color: #4b5563;
+    transform: scale(1.05);
   }
 `;
 
-export const RecommendedProjects = styled.div`
-  width: 100%;
-  background-color: ${props => themes[props.theme].secondaryBackground};
-  border-radius: 0.5rem;
-  padding: 0.75rem;
+export const ContactIcon = styled.div`
+  font-size: 24px;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
+  ${ContactCard}:hover & {
+    transform: scale(1.1);
+  }
+`;
 
+export const ContactCardTitle = styled.h3`
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+`;
+
+export const ContactCardInfo = styled.p`
+  font-size: 14px;
+  color: #9ca3af;
+`;
+
+// Footer
+export const Footer = styled.footer`
+  padding: 64px 16px;
+  border-top: 1px solid #1f2937;
+  @media (min-width: 640px) {
+    padding: 64px 24px;
+  }
+`;
+
+export const FooterContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+export const FooterContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
   @media (min-width: 768px) {
-    width: 20rem;
+    flex-direction: row;
+    justify-content: space-between;
   }
 `;
 
-export const RecommendedTitle = styled.h3`
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: ${props => themes[props.theme].accent};
-  margin-bottom: 0.75rem;
-
-  @media (min-width: 640px) {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-  }
-`;
-
-export const RecommendedItem = styled.div`
-  display: flex;
-  gap: 0.0.5rem;
-  margin-bottom: 0.0rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 0.375rem;
-
+export const FooterLogo = styled.div`
+  font-size: 20px;
+  font-weight: 600;
+  transition: transform 0.3s ease;
+  background: linear-gradient(to right, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   &:hover {
-    background-color: ${props => themes[props.theme].muted};
+    transform: scale(1.05);
   }
-
   @media (min-width: 640px) {
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-    padding: 0.75rem;
+    font-size: 24px;
   }
 `;
 
-export const RecommendedThumbnail = styled.div`
-  width: 6rem;
-  aspect-ratio: 16 / 9;
-  background-color: ${props => themes[props.theme].border};
-  border-radius: 0.375rem;
-`;
-
-export const RecommendedInfo = styled.div`
-  flex: 1;
-`;
-
-export const RecommendedItemTitle = styled.h4`
-  font-size: 0.875rem;
-  font-weight: bold;
-  color: ${props => themes[props.theme].text};
-
-  @media (min-width: 640px) {
-    font-size: 1rem;
-  }
-`;
-
-export const RecommendedItemCategory = styled.div`
-  font-size: 0.75rem;
-  color: ${props => themes[props].tertiaryText};
-
-  @media (min-width: 640px) {
-    font-size: 0.875rem;
-  }
-`;
-
-export const ProjectDetailButton = styled.a`
+export const FooterLinks = styled.div`
   display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.375rem;
-  background-color: ${props => themes[props.theme].accent};
-  color: ${props => themes[props.theme].text};
-  transition: background-color 0.3s;
+  gap: 24px;
+`;
+
+export const FooterLink = styled.a`
+  color: #9ca3af;
   text-decoration: none;
-
+  transition: all 0.3s ease;
   &:hover {
-    background-color: ${props => themes[props.theme].accentHover};
+    color: #fff;
+    transform: scale(1.1) translateY(-4px);
   }
+`;
 
-  @media (min-width: 640px) {
-    padding: 0.5rem 0.75rem;
+export const FooterBottom = styled.div`
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid #1f2937;
+  text-align: center;
+`;
+
+export const FooterText = styled.p`
+  color: #9ca3af;
+  font-size: 14px;
+  transition: color 0.3s ease;
+  &:hover {
+    color: #fff;
   }
+`;
+
+// Scroll to Top Button
+export const ScrollTopButton = styled.button`
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid #374151;
+  border-radius: 9999px;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 40;
+  transform: ${({ isVisible }) =>
+    isVisible ? "translateY(0)" : "translateY(40px)"};
+  opacity: ${({ isVisible }) => (isVisible ? "1" : "0")};
+  &:hover {
+    background: #fff;
+    color: #000;
+    transform: scale(1.1);
+  }
+  @media (max-width: 768px) {
+    bottom: 24px;
+    right: 24px;
+  }
+`;
+
+// Mouse Follower
+export const MouseFollower = styled.div`
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 30;
+  transition: all 0.1s ease;
+  will-change: transform;
 `;
