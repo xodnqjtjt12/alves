@@ -95,6 +95,15 @@ import {
   LoadingOverlay,
   LoadingBarContainer,
   LoadingBar,
+  PopupOverlay,
+  PopupContent,
+  PopupCloseButton,
+  PopupTitle,
+  PopupImage,
+  PopupDescription,
+  PopupTechTags,
+  PopupTechTag,
+  PopupLink,
 } from "../AppCss";
 
 export default function Project() {
@@ -106,10 +115,12 @@ export default function Project() {
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const sectionsRef = useRef({});
   const rafRef = useRef(null);
 
-  // Fixed images for projects (modify this array to change images)
+  // Fixed images for projects
   const fixedImages = [
     "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop",
     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
@@ -117,7 +128,6 @@ export default function Project() {
     "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop",
     "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop",
     "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=600&fit=crop",
-    // Add or remove image URLs as needed
   ];
 
   // Debounce function
@@ -208,7 +218,7 @@ export default function Project() {
           details: doc.data().content.details || "",
           link: doc.data().content.link || "",
           likes: doc.data().content.likes || 0,
-          image: fixedImages[index % fixedImages.length], // Map fixed image
+          image: fixedImages[index % fixedImages.length],
         }));
         setProjects(projectsData);
         setIsLoading(false);
@@ -221,6 +231,17 @@ export default function Project() {
 
     fetchProjects();
   }, []);
+
+  // Popup handlers
+  const openPopup = (project) => {
+    setSelectedProject(project);
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+    setTimeout(() => setSelectedProject(null), 300); // 애니메이션 후 초기화
+  };
 
   const setRef = (id) => (el) => {
     sectionsRef.current[id] = el;
@@ -277,7 +298,7 @@ export default function Project() {
       {/* Navigation */}
       <Nav>
         <NavContainer>
-          <Logo onClick={() => scrollToSection("hero")}>Portfolio</Logo>
+          <Logo onClick={() => scrollToSection("hero")}>JUNG TAE WOO</Logo>
           <NavMenu>
             {navItems.map((item) => (
               <NavItem
@@ -331,13 +352,11 @@ export default function Project() {
         <HeroContent scrollY={scrollY}>
           <HeroLabel>Welcome to my world</HeroLabel>
           <HeroTitle>
-            Creative
+            편리함을 기획하다
             <br />
-            <span className="highlight">Developer</span>
+            <span className="highlight">일상의 혁신을 만듭니다</span>
           </HeroTitle>
-          <HeroSubtitle>
-            디지털 경험을 통해 아이디어를 현실로 만듭니다
-          </HeroSubtitle>
+          <HeroSubtitle>Better Experience, Better Life</HeroSubtitle>
           <HeroButtonGroup>
             <PrimaryButton onClick={() => scrollToSection("work")}>
               <span>프로젝트 보기</span>
@@ -394,12 +413,12 @@ export default function Project() {
             <AboutText>
               <AboutLabel>About Me</AboutLabel>
               <AboutTitle isVisible={isVisible.about}>
-                열정적인 개발자
+                사람들에게 편리함을 주는
               </AboutTitle>
               <AboutParagraph isVisible={isVisible.about} delay={0.2}>
-                안녕하세요. 사용자 경험을 중시하는 크리에이티브 개발자입니다.
-                현대적인 기술과 디자인을 결합하여 의미있는 디지털 제품을
-                만들어갑니다.
+                안녕하세요. 사용자 편의성과 사용성을 최우선으로 생각하는
+                기획자입니다. 현대적인 기술과 디자인을 접목해, 누구나 쉽게
+                사용할 수 있는 의미 있는 디지털 경험을 만들어갑니다.
               </AboutParagraph>
               <AboutParagraph isVisible={isVisible.about} delay={0.4}>
                 새로운 도전을 통해 성장하며, 협업을 통해 더 나은 결과물을
@@ -413,7 +432,16 @@ export default function Project() {
             </AboutText>
             <AboutImageContainer isVisible={isVisible.about}>
               <AboutImage>
-                <div className="icon">👨‍💻</div>
+                <img
+                  src="/vite3.jpg"
+                  alt="About Me"
+                  style={{
+                    width: "120%",
+                    height: "120%",
+                    objectFit: "cover",
+                    borderRadius: "24px",
+                  }}
+                />
                 <div className="overlay" />
               </AboutImage>
             </AboutImageContainer>
@@ -435,25 +463,31 @@ export default function Project() {
               {
                 title: "Frontend",
                 skills: ["React", "TypeScript", "Tailwind CSS", "Next.js"],
-                icon: "🎨",
+                icon: "🧑‍💻",
                 color: "#2563EB, #06B6D4",
               },
               {
-                title: "Backend",
-                skills: ["Node.js", "Python", "MongoDB", "PostgreSQL"],
-                icon: "⚙️",
+                title: "Planning",
+                skills: [
+                  "Product Roadmap",
+                  "User Research",
+                  "Feature Prioritization",
+                  "Figma",
+                  "Notion/Confluence",
+                ],
+                icon: "🧠",
                 color: "#16A34A, #14B8A6",
               },
               {
-                title: "Design",
+                title: "Communication",
                 skills: [
-                  "Figma",
-                  "Adobe Creative Suite",
-                  "UI/UX",
-                  "Prototyping",
+                  "Team Collaboration",
+                  "Documentation",
+                  "Jira & teams",
+                  "Presentation Skills",
                 ],
-                icon: "✨",
-                color: "#7C3AED, #EC4899",
+                icon: "💬",
+                color: "#3B82F6, #6366F1",
               },
             ].map((category, index) => (
               <SkillCard
@@ -491,9 +525,9 @@ export default function Project() {
         <ProjectsContainer>
           <ProjectsHeader>
             <ProjectsLabel>Portfolio</ProjectsLabel>
-            <ProjectsTitle>주요 프로젝트</ProjectsTitle>
+            <ProjectsTitle>사이드 프로젝트</ProjectsTitle>
             <ProjectsSubtitle>
-              정성스럽게 제작한 프로젝트들을 소개합니다
+              업무 외 성장을 위한 프로젝트입니다.
             </ProjectsSubtitle>
           </ProjectsHeader>
           {error ? (
@@ -528,7 +562,7 @@ export default function Project() {
                       ))}
                     </TechTags>
                     <ProjectButtonGroup>
-                      <ProjectDetailsButton>
+                      <ProjectDetailsButton onClick={() => openPopup(project)}>
                         <span>자세히 보기</span>
                         <span>→</span>
                       </ProjectDetailsButton>
@@ -560,6 +594,38 @@ export default function Project() {
           )}
         </ProjectsContainer>
       </ProjectsSection>
+
+      {/* Popup Component */}
+      {isPopupOpen && selectedProject && (
+        <PopupOverlay isOpen={isPopupOpen} onClick={closePopup}>
+          <PopupContent onClick={(e) => e.stopPropagation()}>
+            <PopupCloseButton onClick={closePopup}>×</PopupCloseButton>
+            <PopupImage
+              src={selectedProject.image}
+              alt={selectedProject.title}
+            />
+            <PopupTitle>{selectedProject.title}</PopupTitle>
+            <PopupDescription>{selectedProject.description}</PopupDescription>
+            <PopupTechTags>
+              {selectedProject.tech.map((tech) => (
+                <PopupTechTag key={tech}>{tech}</PopupTechTag>
+              ))}
+            </PopupTechTags>
+            {selectedProject.link && (
+              <PopupLink
+                href={selectedProject.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Visit Site
+              </PopupLink>
+            )}
+            {selectedProject.details && (
+              <PopupDescription>{selectedProject.details}</PopupDescription>
+            )}
+          </PopupContent>
+        </PopupOverlay>
+      )}
 
       {/* Contact Section */}
       <ContactSection
@@ -629,7 +695,12 @@ export default function Project() {
       </Footer>
 
       {/* Scroll to Top Button */}
-      <ScrollTopButton isVisible={scrollY > 500}>↑</ScrollTopButton>
+      <ScrollTopButton
+        isVisible={scrollY > 500}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      >
+        ↑
+      </ScrollTopButton>
 
       {/* Mouse Follower */}
       <MouseFollower

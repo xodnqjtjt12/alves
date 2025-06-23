@@ -1,22 +1,6 @@
 import styled, { createGlobalStyle, keyframes } from "styled-components";
 
-// Global styles
-export const GlobalStyle = createGlobalStyle`
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #000;
-    color: #fff;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-  }
-`;
-
-// Animations
+// Animations (최상단으로 이동)
 export const fadeInUp = keyframes`
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -40,6 +24,22 @@ export const bounce = keyframes`
 export const loadingPulse = keyframes`
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
+`;
+
+// Global styles
+export const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #000;
+    color: #fff;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
 `;
 
 // Loading Bar
@@ -162,24 +162,40 @@ export const MobileMenuButton = styled.button`
 
 export const MobileMenuIcon = styled.div`
   width: 24px;
-  height: 24px;
+  height: 18px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 6px;
+  justify-content: space-between;
+  position: relative;
+  margin-left: 20px;
+
   div {
     width: 100%;
-    height: 2px;
+    height: 3px;
     background: #fff;
+    border-radius: 2px;
     transition: all 0.3s ease;
+    position: absolute;
+    transform-origin: center;
   }
-  ${({ isOpen }) =>
-    isOpen &&
-    `
-    div:nth-child(1) { transform: rotate(45deg) translateY(7px); }
-    div:nth-child(2) { opacity: 0; }
-    div:nth-child(3) { transform: rotate(-45deg) translateY(-7px); }
-  `}
+
+  div:nth-child(1) {
+    top: 0;
+    ${({ isOpen }) =>
+      isOpen && `transform: rotate(45deg); top: 50%; margin-top: -1.5px;`}
+  }
+
+  div:nth-child(2) {
+    top: 50%;
+    margin-top: -1.5px;
+    ${({ isOpen }) => isOpen && `opacity: 0; transform: scaleX(0);`}
+  }
+
+  div:nth-child(3) {
+    bottom: 0;
+    ${({ isOpen }) =>
+      isOpen && `transform: rotate(-45deg); top: 50%; margin-top: -1.5px;`}
+  }
 `;
 
 export const MobileMenu = styled.div`
@@ -196,14 +212,14 @@ export const MobileMenu = styled.div`
 
 export const MobileMenuItem = styled.button`
   display: block;
-  width: 100%;
+  width: calc(100% - 48px);
   text-align: left;
   padding: 12px 24px;
   color: ${({ active }) => (active ? "#fff" : "#9CA3AF")};
   background: ${({ active }) =>
     active ? "rgba(255, 255, 255, 0.2)" : "transparent"};
   border-radius: 8px;
-  margin: 8px 16px;
+  margin: 8px 24px;
   font-size: 16px;
   transition: all 0.3s ease;
   &:hover {
@@ -1074,4 +1090,122 @@ export const MouseFollower = styled.div`
   z-index: 30;
   transition: all 0.1s ease;
   will-change: transform;
+`;
+
+// Popup Styles
+export const PopupOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+  visibility: ${({ isOpen }) => (isOpen ? "visible" : "hidden")};
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+`;
+
+export const PopupContent = styled.div`
+  background: #1f2937;
+  border-radius: 16px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 32px;
+  position: relative;
+  animation: ${fadeInUp} 0.5s ease-out forwards;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  @media (max-width: 640px) {
+    padding: 24px;
+    width: 95%;
+  }
+`;
+
+export const PopupCloseButton = styled.button`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  &:hover {
+    color: #fff;
+  }
+`;
+
+export const PopupTitle = styled.h2`
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #fff;
+  @media (max-width: 640px) {
+    font-size: 24px;
+  }
+`;
+
+export const PopupImage = styled.img`
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  @media (max-width: 640px) {
+    height: 150px;
+  }
+`;
+
+export const PopupDescription = styled.p`
+  font-size: 16px;
+  color: #9ca3af;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  @media (max-width: 640px) {
+    font-size: 14px;
+  }
+`;
+
+export const PopupTechTags = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+`;
+
+export const PopupTechTag = styled.span`
+  padding: 4px 12px;
+  background: #374151;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 9999px;
+  @media (max-width: 640px) {
+    font-size: 10px;
+  }
+`;
+
+export const PopupLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 24px;
+  background: #60a5fa;
+  color: #fff;
+  border-radius: 9999px;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  &:hover {
+    background: #3b82f6;
+    transform: scale(1.05);
+  }
+  @media (max-width: 640px) {
+    font-size: 12px;
+    padding: 10px 20px;
+  }
 `;
