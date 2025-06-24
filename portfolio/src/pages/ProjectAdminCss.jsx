@@ -1,6 +1,5 @@
 import styled, { keyframes } from "styled-components";
 
-// 애니메이션 정의
 export const fadeInUp = keyframes`
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -113,6 +112,49 @@ export const Textarea = styled.textarea`
   }
 `;
 
+export const DropZone = styled.div`
+  width: 100%;
+  padding: 24px;
+  background: #2a2e34;
+  border: 2px dashed ${({ isDragging }) => (isDragging ? "#3182f6" : "#3f444c")};
+  border-radius: 8px;
+  text-align: center;
+  color: #d1d5db;
+  font-size: 16px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  &:hover {
+    border-color: #3182f6;
+    background: #30343a;
+  }
+`;
+
+export const FileInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding: 12px;
+  background: #2a2e34;
+  border-radius: 8px;
+  color: #d1d5db;
+  font-size: 14px;
+`;
+
+export const RemoveFileButton = styled.button`
+  background: #f04438;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  &:hover {
+    background: #dc2626;
+  }
+`;
+
 export const SubmitButton = styled.button`
   padding: 12px 24px;
   background: #3182f6;
@@ -184,6 +226,16 @@ export const Link = styled.a`
   transition: color 0.3s ease;
   &:hover {
     color: #2563eb;
+    text-decoration: underline;
+  }
+`;
+
+export const PdfLink = styled.a`
+  color: #f04438;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  &:hover {
+    color: #dc2626;
     text-decoration: underline;
   }
 `;

@@ -689,26 +689,46 @@ export const ProjectsSubtitle = styled.p`
 `;
 
 export const ProjectCard = styled.div`
-  display: grid;
-  gap: 32px;
-  align-items: center;
-  margin-bottom: 96px;
-  @media (min-width: 767px) {
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 768px) {
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    margin-bottom: 128px;
-    &:nth-child(even) {
-      .column-1 {
-        grid-column-start: 2;
-      }
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: #1a1d24;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &.first-project {
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+
+    .column-1 {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .column-2 {
+      flex: 0 0 40%;
+      max-width: 400px;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
       .column-2 {
-        grid-column-start: 1;
-        grid-column-end: 2;
+        max-width: 100%;
       }
     }
+  }
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    margin-bottom: 2rem;
   }
 `;
 
@@ -1187,6 +1207,26 @@ export const PopupTechTag = styled.span`
   border-radius: 9999px;
   @media (max-width: 640px) {
     font-size: 10px;
+  }
+`;
+
+export const ProjectPdfButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: #f04438;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.3s ease;
+  &:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+  }
+  & > span:last-child {
+    margin-left: 8px;
   }
 `;
 

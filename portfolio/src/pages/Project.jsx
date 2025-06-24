@@ -117,13 +117,14 @@ export default function Project() {
   const [error, setError] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isEmailPopupOpen, setIsEmailPopupOpen] = useState(false); // 이메일 팝업 상태 추가
   const sectionsRef = useRef({});
   const rafRef = useRef(null);
 
   // Fixed images for projects
   const fixedImages = [
-    "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop",
-    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop",
+    "/soopfc3.png",
+    "/waywarker.png",
     "https://images.unsplash.com/photo-1558655146-d09347e92766?w=800&h=600&fit=crop",
     "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop",
     "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop",
@@ -241,6 +242,20 @@ export default function Project() {
   const closePopup = () => {
     setIsPopupOpen(false);
     setTimeout(() => setSelectedProject(null), 300); // 애니메이션 후 초기화
+  };
+
+  // 이메일 팝업 핸들러
+  const openEmailPopup = () => {
+    setIsEmailPopupOpen(true);
+  };
+
+  const closeEmailPopup = () => {
+    setIsEmailPopupOpen(false);
+  };
+
+  const sendEmail = () => {
+    window.location.href = "mailto:xodn0729@naver.com";
+    closeEmailPopup();
   };
 
   const setRef = (id) => (el) => {
@@ -627,6 +642,23 @@ export default function Project() {
         </PopupOverlay>
       )}
 
+      {/* Email Confirmation Popup */}
+      {isEmailPopupOpen && (
+        <PopupOverlay isOpen={isEmailPopupOpen} onClick={closeEmailPopup}>
+          <PopupContent onClick={(e) => e.stopPropagation()}>
+            <PopupCloseButton onClick={closeEmailPopup}>×</PopupCloseButton>
+            <PopupTitle>정태우님과 함께 하시겠습니까?</PopupTitle>
+            <ProjectButtonGroup>
+              <PrimaryButton onClick={sendEmail}>
+                <span>확인</span>
+                <span>→</span>
+              </PrimaryButton>
+              <SecondaryButton onClick={closeEmailPopup}>취소</SecondaryButton>
+            </ProjectButtonGroup>
+          </PopupContent>
+        </PopupOverlay>
+      )}
+
       {/* Contact Section */}
       <ContactSection
         id="contact"
@@ -641,17 +673,24 @@ export default function Project() {
             도전을 환영합니다.
           </ContactSubtitle>
           <ContactButtonGroup>
-            <PrimaryButton>
+            <PrimaryButton onClick={openEmailPopup}>
               <span>이메일 보내기</span>
               <span>✉️</span>
             </PrimaryButton>
-            <SecondaryButton>LinkedIn 연결</SecondaryButton>
+            <SecondaryButton
+              as="a"
+              href="https://github.com/xodnqjtjt12"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Github 연결
+            </SecondaryButton>
           </ContactButtonGroup>
           <ContactCardGrid>
             {[
-              { icon: "📧", title: "Email", info: "hello@portfolio.com" },
-              { icon: "📱", title: "Phone", info: "+82 10-1234-5678" },
-              { icon: "📍", title: "Location", info: "Seoul, South Korea" },
+              { icon: "📧", title: "Email", info: "xodn0729@naver.com" },
+              { icon: "📱", title: "Phone", info: "+82 10-2677-8035" },
+              { icon: "📍", title: "Location", info: "Suwon, South Korea" },
             ].map((contact, index) => (
               <ContactCard
                 key={contact.title}
@@ -668,7 +707,7 @@ export default function Project() {
       </ContactSection>
 
       {/* Footer */}
-      <Footer>
+      {/* <Footer>
         <FooterContainer>
           <FooterContent>
             <FooterLogo>Portfolio</FooterLogo>
@@ -692,7 +731,7 @@ export default function Project() {
             </FooterText>
           </FooterBottom>
         </FooterContainer>
-      </Footer>
+      </Footer> */}
 
       {/* Scroll to Top Button */}
       <ScrollTopButton
