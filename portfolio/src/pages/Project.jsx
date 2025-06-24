@@ -123,9 +123,9 @@ export default function Project() {
 
   // Fixed images for projects
   const fixedImages = [
+    "/soopgift.png",
     "/soopfc3.png",
     "/waywarker.png",
-    "https://images.unsplash.com/photo-1558655146-d09347e92766?w=800&h=600&fit=crop",
     "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop",
     "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=600&fit=crop",
     "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=600&fit=crop",
@@ -477,7 +477,13 @@ export default function Project() {
             {[
               {
                 title: "Frontend",
-                skills: ["React", "TypeScript", "Tailwind CSS", "Next.js"],
+                skills: [
+                  "React",
+                  "TypeScript",
+                  "Styled-components",
+                  "GitHub",
+                  "Firebase",
+                ],
                 icon: "🧑‍💻",
                 color: "#2563EB, #06B6D4",
               },
@@ -488,7 +494,7 @@ export default function Project() {
                   "User Research",
                   "Feature Prioritization",
                   "Figma",
-                  "Notion/Confluence",
+                  "Notion",
                 ],
                 icon: "🧠",
                 color: "#16A34A, #14B8A6",
